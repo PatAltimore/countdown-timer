@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/7dcbcfe0-5e3c-4258-9a1a-9dd2368bc206/resourceGroups/countdown-rg/providers/Microsoft.Web/sites/countdownsync",
+    "appService.deploySubpath": "."
+}
