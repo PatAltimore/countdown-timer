@@ -25,12 +25,7 @@ document.body.appendChild(link);
 var qrCodeElement = document.createElement('div');
 document.body.appendChild(qrCodeElement);
 
-// Generate the QR code
-new QRCode(qrCodeElement, {
-    text: window.location.href,
-    width: 128,
-    height: 128
-});
+
 
 
 
@@ -58,7 +53,7 @@ function startCountdown(start, seconds) {
     var count = seconds;
 
     // Display the start time
-    startTimeElement.innerText = "Countdown started at: " + new Date(start).toLocaleTimeString();
+    startTimeElement.innerText = "Countdown started at: " + start.toLocaleTimeString();
 
     // Update the countdown every second
     var countdown = setInterval(function() {
@@ -75,6 +70,14 @@ function startCountdown(start, seconds) {
             sendNotification();
         }
     }, 1000);
+
+    
+    // Generate the QR code
+    new QRCode(qrCodeElement, {
+        text: `https://jolly-tree-0cd1be41e.4.azurestaticapps.net?startTime=${encodeURIComponent(start)}&seconds=${encodeURIComponent(seconds)}`,
+        width: 128,
+        height: 128
+    });
 }
 
 function sendNotification() {
