@@ -1,29 +1,3 @@
-// Create elements to display the start time and countdown
-var startTimeElement = document.createElement('p');
-var countdownElement = document.createElement('p');
-
-document.body.appendChild(startTimeElement);
-document.body.appendChild(countdownElement);
-
-// Create the restart link
-var link = document.createElement('a');
-link.href = "#";
-link.innerText = "Offset countdown";
-link.onclick = function() {
-    // Format the startTime and seconds parameters
-    var startTimeParam = encodeURIComponent(startTime.toISOString());
-    var secondsParam = encodeURIComponent(seconds);
-
-    // Change the window location to make an HTTP request to the index.html page with the parameters
-    window.location.href = 'index.html?startTime=' + startTimeParam + '&seconds=' + secondsParam;
-
-    return false; // Prevent the link from navigating to the href
-};
-document.body.appendChild(link);
-
-// Create a div to hold the QR code
-var qrCodeElement = document.createElement('div');
-document.body.appendChild(qrCodeElement);
 
 
 
@@ -52,6 +26,18 @@ function startCountdown(start, seconds) {
     // Set the countdown time in seconds
     var count = seconds;
 
+    // Create elements to display the start time and countdown
+    var startTimeElement = document.createElement('p');
+    var countdownElement = document.createElement('p');
+
+    document.body.appendChild(startTimeElement);
+    document.body.appendChild(countdownElement);
+    countdownElement.className = 'digital-clock';
+
+    // Create a div to hold the QR code
+    var qrCodeElement = document.createElement('div');
+    document.body.appendChild(qrCodeElement);
+
     // Display the start time
     startTimeElement.innerText = "Countdown started at: " + start.toLocaleTimeString();
 
@@ -60,7 +46,7 @@ function startCountdown(start, seconds) {
 
         var minutes = Math.floor(count / 60);
         var seconds = count % 60;
-        countdownElement.innerText = "Time remaining: " + minutes + " minutes " + seconds + " seconds";
+        countdownElement.innerText = String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
         count--;
 
         // When the countdown reaches 0, stop the countdown
