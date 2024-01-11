@@ -1,7 +1,4 @@
-
-
-
-
+let urlCountdown = "";
 
 // Parse the query parameters from the URL
 var urlParams = new URLSearchParams(window.location.search);
@@ -59,10 +56,10 @@ function startCountdown(start, seconds) {
         }
     }, 1000);
 
-    
+    urlCountdown = "https://jolly-tree-0cd1be41e.4.azurestaticapps.net?startTime=" + encodeURIComponent(start) + "&seconds=" + encodeURIComponent(seconds);
     // Generate the QR code
     new QRCode(qrCodeElement, {
-        text: `https://jolly-tree-0cd1be41e.4.azurestaticapps.net?startTime=${encodeURIComponent(start)}&seconds=${encodeURIComponent(seconds)}`,
+        text: urlCountdown,
         width: 128,
         height: 128
     });
@@ -95,5 +92,11 @@ document.getElementById('startButton').addEventListener('click', function() {
     var seconds = minutes * 60;
 
     startCountdown(new Date(), seconds);
+});
+
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        location.href = urlCountdown;
+    }
 });
 
