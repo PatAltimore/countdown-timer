@@ -31,6 +31,8 @@ function startCountdown(start, seconds) {
     var countdownElement = document.createElement('p');
 
     document.body.appendChild(startTimeElement);
+    startTimeElement.className = 'timer';
+
     document.body.appendChild(countdownElement);
     countdownElement.className = 'digital-clock';
 
@@ -39,7 +41,7 @@ function startCountdown(start, seconds) {
     document.body.appendChild(qrCodeElement);
 
     // Display the start time
-    startTimeElement.innerText = "Countdown started at: " + start.toLocaleTimeString();
+    startTimeElement.innerText = Math.floor(seconds / 60) + " minute countdown started at: " + start.toLocaleTimeString();
 
     // Update the countdown every second
     var countdown = setInterval(function() {
