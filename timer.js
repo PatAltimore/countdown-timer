@@ -5,15 +5,25 @@ var urlParams = new URLSearchParams(window.location.search);
 var startTimeParam = urlParams.get('startTime');
 var secondsParam = urlParams.get('seconds');
 
+var startTime;
+var countdownSeconds;
+var countdown;
+var count;
+
+
+
 // If startTime and seconds parameters are provided, use them. Otherwise, use default values.
 
 if (startTimeParam && secondsParam) {
-    var startTime = new Date(startTimeParam);
-    var countdownSeconds = parseInt(secondsParam) - Math.floor((new Date() - startTime)/1000);
+    startTime = new Date(startTimeParam);
+    countdownSeconds = parseInt(secondsParam) - Math.floor((new Date() - startTime)/1000);
     startCountdown(startTime, countdownSeconds);
 }
 
 function startCountdown(start, seconds) {
+
+    var countdownElement = document.getElementById('countdown');
+    var qrCodeElement = document.getElementById('qr-code');
 
     // If a countdown is already running, stop it
     if (countdown) {
@@ -21,27 +31,10 @@ function startCountdown(start, seconds) {
     }
 
     // Set the countdown time in seconds
-    var count = seconds;
-
-    // Create elements to display the start time and countdown
-    var startTimeElement = document.createElement('p');
-    var countdownElement = document.createElement('p');
-
-    document.body.appendChild(startTimeElement);
-    startTimeElement.className = 'timer';
-
-    document.body.appendChild(countdownElement);
-    countdownElement.className = 'digital-clock';
-
-    // Create a div to hold the QR code
-    var qrCodeElement = document.createElement('div');
-    document.body.appendChild(qrCodeElement);
-
-    // Display the start time
-    startTimeElement.innerText = Math.floor(seconds / 60) + " minute countdown started at: " + start.toLocaleTimeString();
+    count = seconds;
 
     // Update the countdown every second
-    var countdown = setInterval(function() {
+    countdown = setInterval(function() {
 
         var minutes = Math.floor(count / 60);
         var seconds = count % 60;
@@ -56,14 +49,37 @@ function startCountdown(start, seconds) {
         }
     }, 1000);
 
-    urlCountdown = "https://jolly-tree-0cd1be41e.4.azurestaticapps.net?startTime=" + encodeURIComponent(start) + "&seconds=" + encodeURIComponent(seconds);
+    urlCountdown = "https://jolly-tree-0cd1be41e.4.azurestaticapps.net?startTime=" + encodeURIComponent(startTime) + "&seconds=" + encodeURIComponent(countdownSeconds);
+
+    // Clear the qr-code element
+    while (qrCodeElement.firstChild) {
+        qrCodeElement.removeChild(qrCodeElement.firstChild);
+    }
+
     // Generate the QR code
+    
     new QRCode(qrCodeElement, {
         text: urlCountdown,
         width: 128,
         height: 128
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('startButton').addEventListener('click', function() {
+        var minutes = document.getElementById('minutes').value;
+        startTime = new Date();
+        countdownSeconds = minutes * 60;
+
+        startCountdown(startTime, countdownSeconds);
+    });
+});
+
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        count = count - Math.floor((new Date() - startTime)/1000);
+    }
+});
 
 function sendNotification() {
     // Check if the browser supports notifications
@@ -86,17 +102,4 @@ function sendNotification() {
         });
     }
 }
-
-document.getElementById('startButton').addEventListener('click', function() {
-    var minutes = document.getElementById('minutes').value;
-    var seconds = minutes * 60;
-
-    startCountdown(new Date(), seconds);
-});
-
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-        location.href = urlCountdown;
-    }
-});
 
